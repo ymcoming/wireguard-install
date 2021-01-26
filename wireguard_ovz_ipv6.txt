@@ -1,0 +1,125 @@
+echo "deb http://deb.debian.org/debian/ unstable main" > /etc/apt/sources.list.d/unstable.list && printf 'Package: *\nPin: release a=unstable\nPin-Priority: 90\n' > /etc/apt/preferences.d/limit-unstable && apt update
+
+apt install wireguard-tools --no-install-recommends
+
+cd /tmp && wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz && tar zvxf go1.13.4.linux-amd64.tar.gz && sudo mv go /opt/go1.13.4 && sudo ln -s /opt/go1.13.4/bin/go /usr/local/bin/go
+
+go version
+
+apt install make
+
+cd /usr/local/src && wget https://git.zx2c4.com/wireguard-go/snapshot/wireguard-go-0.0.20191012.tar.xz && tar xvf wireguard-go-0.0.20191012.tar.xz && cd wireguard-go-0.0.20191012
+
+make
+
+cp wireguard-go /usr/local/bin
+
+wireguard-go --version
+
+wg genkey | tee private key | wg pubkey > publickey
+
+`nano /lib/systemd/system/wg-quick@.service`,add this line directly below:
+Environment=WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1
+
+ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
+ln -sf /lib/systemd/system/systemd-resolved.service /etc/systemd/system/dbus-org.freedesktop.resolve1.service
+
+wg-quick up wg0
+
+wg-quick down wg0
+
+IPv6，将它们添加到/etc/wireguard/wg0.conf
+
+PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
+PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE
+
+systemctl enable wg-quick@wg0
+systemctl start wg-quick@wg0
+wg
+
+
+------------------------------------
+
+Following are my conf
+
+OpenVZ6 VPS
+
+Server Config /etc/wireguard/wg0.conf
+
+[Interface]
+Address = 10.66.66.1/24
+PrivateKey = PRIVATE KEY OF SERVER
+ListenPort = PORT
+PostUp = iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
+PostDown = iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE
+SaveConfig = false
+[Peer]
+PublicKey = PUBLIC KEY OF CLIENT
+AllowedIPs = 10.66.66.3/24
+Client Config
+
+[Interface]
+PrivateKey = PRIVATE KEY OF CLIENT
+Address = 10.66.66.3/24
+DNS = 8.8.8.8, 8.8.4.4
+
+[Peer]
+PublicKey = PUBLIC KEY OF SERVER
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = SERVER IP:PORT
+PersistentKeepalive = 25
+Frequently used commands
+
+nano /etc/wireguard/wg0.conf
+
+systemctl enable wg-quick@wg0
+systemctl status wg-quick@wg0
+systemctl start wg-quick@wg0
+systemctl stop wg-quick@wg0
+wg-quick up wg0
+wg-quick down wg0
+===============
+
+OpenVZ7
+
+Server Config /etc/wireguard/wg0.conf
+
+[Interface]
+Address = 10.123.0.1/24,fd42:42:42::1/80
+PrivateKey = PRIVATE KEY OF SERVER
+ListenPort = PORT
+PostUp = iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE; ip6tables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
+PostDown = iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE; ip6tables -t nat -D POSTROUTING -o venet0 -j MASQUERADE
+SaveConfig = false
+
+[Peer]
+PublicKey = PUBLIC KEY OF CLIENT1
+AllowedIPs = 10.123.0.3/32,fd42:42:42::3/128
+
+[Peer]
+PublicKey = PUBLIC KEY OF CLIENT2
+AllowedIPs = 10.123.0.4/32,fd42:42:42::4/128
+Client1 Config
+
+[Interface]
+PrivateKey = PRIVATE KEY OF CLIENT1
+Address = 10.123.0.3/24, fd42:42:42::3/80
+DNS = 8.8.8.8, 8.8.4.4, 2001:4860:4860::8888
+
+[Peer]
+PublicKey = PUBLIC KEY OF SERVER
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = SERVER IP:PORT
+PersistentKeepalive = 25
+Client2 Config
+
+[Interface]
+PrivateKey = PRIVATE KEY OF CLIENT2
+Address = 10.123.0.4/24, fd42:42:42::4/80
+DNS = 8.8.8.8, 8.8.4.4, 2001:4860:4860::8888
+
+[Peer]
+PublicKey = PUBLIC KEY OF SERVER
+AllowedIPs = 0.0.0.0/0, ::/0
+Endpoint = SERVER IP:PORT
+PersistentKeepalive = 25
