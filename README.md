@@ -15,6 +15,14 @@ wget https://git.io/wireguard -O wireguard-install.sh && bash wireguard-install.
 
 Once it ends, you can run it again to add more users, remove some of them or even completely uninstall WireGuard.
 
+systemctl enable wg-quick@wg0
+
+systemctl status wg-quick@wg0
+
+systemctl start wg-quick@wg0
+
+systemctl stop wg-quick@wg0
+
 ### I want to run my own VPN but don't have a server for that
 You can get a VPS from just $1/month at [VirMach](https://billing.virmach.com/aff.php?aff=4109&url=billing.virmach.com/cart.php?gid=18).
 
