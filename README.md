@@ -5,11 +5,13 @@ This script will let you set up your own VPN server in no more than a minute, ev
 
 ### Installation
 Run the script and follow the assistant:
+before:
 
 modprobe wireguard 
+
 reboot
 
-`wget https://git.io/wireguard -O wireguard-install.sh && bash wireguard-install.sh`
+wget https://git.io/wireguard -O wireguard-install.sh && bash wireguard-install.sh
 
 Once it ends, you can run it again to add more users, remove some of them or even completely uninstall WireGuard.
 
