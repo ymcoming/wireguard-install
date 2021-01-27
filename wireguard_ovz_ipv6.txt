@@ -10,6 +10,10 @@ apt install make
 
 cd /usr/local/src && wget https://git.zx2c4.com/wireguard-go/snapshot/wireguard-go-0.0.20191012.tar.xz && tar xvf wireguard-go-0.0.20191012.tar.xz && cd wireguard-go-0.0.20191012
 
+nano device/queueconstants_default.go
+MaxSegmentSize             = 1700 
+PreallocatedBuffersPerPool = 1024 
+
 make
 
 cp wireguard-go /usr/local/bin
@@ -18,7 +22,7 @@ wireguard-go --version
 
 wg genkey | tee private key | wg pubkey > publickey
 
-`nano /lib/systemd/system/wg-quick@.service`,add this line directly below:
+`nano /lib/systemd/system/wg-quick@.service`,add this line directly below:   Environment=WG_ENDPOINT_RESOLUTION_RETRIES=infinity 
 Environment=WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1
 
 ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
@@ -28,9 +32,19 @@ wg-quick up wg0
 
 wg-quick down wg0
 
-IPv6£¬½«ËüÃÇÌí¼Óµ½/etc/wireguard/wg0.conf
+ /etc/wireguard/wg0.conf
 
 ifconfig  查看网卡名称
+
+IPv4
+
+PostUp = iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
+PostDown = iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE)
+
+For IPv6, add these in /etc/wireguard/wg0.conf
+
+PostUp = iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE; ip6tables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
+PostDown = iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE; ip6tables -t nat -D POSTROUTING -o venet0 -j MASQUERADE
 
 PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE
