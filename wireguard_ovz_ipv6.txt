@@ -30,6 +30,8 @@ wg-quick down wg0
 
 IPv6£¬½«ËüÃÇÌí¼Óµ½/etc/wireguard/wg0.conf
 
+ifconfig  查看网卡名称
+
 PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE
 
