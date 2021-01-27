@@ -2,7 +2,7 @@ echo "deb http://deb.debian.org/debian/ unstable main" > /etc/apt/sources.list.d
 
 apt install wireguard-tools --no-install-recommends
 
-cd /tmp && wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz && tar zvxf go1.13.4.linux-amd64.tar.gz && sudo mv go /opt/go1.13.4 && sudo ln -s /opt/go1.13.4/bin/go /usr/local/bin/go
+cd /tmp && wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz && tar zvxf go1.13.4.linux-amd64.tar.gz &&  mv go /opt/go1.13.4 &&  ln -s /opt/go1.13.4/bin/go /usr/local/bin/go
 
 go version
 
@@ -28,7 +28,7 @@ wg-quick up wg0
 
 wg-quick down wg0
 
-IPv6£¬½«ËüÃÇÌí¼Óµ½/etc/wireguard/wg0.conf
+IPv6Â£Â¬Â½Â«Ã‹Ã¼ÃƒÃ‡ÃŒÃ­Â¼Ã“ÂµÂ½/etc/wireguard/wg0.conf
 
 PostUp   = iptables -A FORWARD -i %i -j ACCEPT; iptables -A FORWARD -o %i -j ACCEPT; iptables -t nat -A POSTROUTING -o venet0 -j MASQUERADE
 PostDown = iptables -D FORWARD -i %i -j ACCEPT; iptables -D FORWARD -o %i -j ACCEPT; iptables -t nat -D POSTROUTING -o venet0 -j MASQUERADE
