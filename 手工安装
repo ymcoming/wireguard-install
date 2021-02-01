@@ -46,28 +46,17 @@ wg genkey | tee client_privatekey | wg pubkey > client_publickey
 # 以下内容一次性粘贴执行，不要分行执行
 
 echo "
-
 [Interface]
-
   PrivateKey = $(cat server_privatekey)
-  
-  Address = 10.0.0.1/24
-  
-  PostUp   = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
-  
-  PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
-  
-  ListenPort = 50814
-  
-  DNS = 8.8.8.8
-  
-  MTU = 1420
-
+    Address = 10.0.0.1/24
+    PostUp   = iptables -A FORWARD -i wg0 -j ACCEPT; iptables -A FORWARD -o wg0 -j ACCEPT; iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    PostDown = iptables -D FORWARD -i wg0 -j ACCEPT; iptables -D FORWARD -o wg0 -j ACCEPT; iptables -t nat -D POSTROUTING -o eth0 -j MASQUERADE
+    ListenPort = 50814
+    DNS = 8.8.8.8
+    MTU = 1420
 [Peer]
-
   PublicKey = $(cat client_publickey)
-  
-  AllowedIPs = 10.0.0.2/32 " > wg0.conf
+    AllowedIPs = 10.0.0.2/32 " > wg0.conf
 
 
 
@@ -81,26 +70,16 @@ systemctl enable wg-quick@wg0
 # 以下内容一次性粘贴执行，不要分行执行
 
 echo "
-
 [Interface]
-
   PrivateKey = $(cat client_privatekey)
-  
-  Address = 10.0.0.2/24
-  
-  DNS = 8.8.8.8
-  
-  MTU = 1420
-
+    Address = 10.0.0.2/24
+    DNS = 8.8.8.8
+    MTU = 1420
 [Peer]
-
   PublicKey = $(cat server_publickey)
-  
-  Endpoint = 1.2.3.4:50814
-  
-  AllowedIPs = 0.0.0.0/0, ::0/0
-  
-  PersistentKeepalive = 25 " > client.conf
+    Endpoint = 1.2.3.4:50814
+    AllowedIPs = 0.0.0.0/0, ::0/0
+    PersistentKeepalive = 25 " > client.conf
 
 
 # 启动WireGuard
