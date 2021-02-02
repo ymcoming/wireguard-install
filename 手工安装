@@ -25,8 +25,18 @@ apt-get install wireguard-dkms wireguard-tools resolvconf -y
 
 
 # 开启ipv4流量转发
+# Uncomment the next line to enable packet forwarding for IPv4
 
 echo "net.ipv4.ip_forward = 1" >> /etc/sysctl.conf
+
+# Uncomment the next line to enable packet forwarding for IPv6
+
+echo "net.ipv6.ip_forward = 1" >> /etc/sysctl.conf
+
+然后
+reboot or
+
+sysctl –p /etc/sysctl.conf
 
 sysctl -p
 
