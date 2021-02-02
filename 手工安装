@@ -106,5 +106,49 @@ apt install qrencode -y
 qrencode -t ansiutf8 < /etc/wireguard/client.conf
 
 
+添加新客户端的方法：
+
+# 停止WireGuard
+wg-quick down wg0
+
+# 生成新的客户端密钥对
+wg genkey | tee client0_privatekey | wg pubkey > client0_publickey
+
+
+# 在服务端配置文件中加入新的客户端公钥
+# AllowedIPs重新定义一段
+# 一次性复制粘贴，不要分行执行
+echo "
+[Peer]
+  PublicKey = $(cat client0_publickey)
+  AllowedIPs = 10.0.0.3/32" >> wg0.conf
+
+
+# 新建一个客户端文件，使用新客户端密钥的私钥
+# Address与上面的AllowedIPs保持一致
+# Endpoint和之前的一样，为服务器ip和设置好的ListenPort
+# 一次性复制粘贴，不要分行执行
+echo "
+[Interface]
+  PrivateKey = $(cat client0_privatekey)
+  Address = 10.0.0.3/24
+  DNS = 8.8.8.8
+  MTU = 1420
+
+[Peer]
+  PublicKey = $(cat server_publickey)
+  Endpoint = 1.2.3.4:50814
+  AllowedIPs = 0.0.0.0/0, ::0/0
+  PersistentKeepalive = 25 " > client0.conf
+
+
+# 已经成功创建后，启动WireGuard
+wg-quick up wg0
+
+# 导出客户端配置文件方式依旧可以采用上面介绍的两种方法，例如此客户端文件生成二维码就应该为
+qrencode -t ansiutf8 < /etc/wireguard/client0.conf
+
+
+
 
 
