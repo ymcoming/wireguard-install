@@ -39,6 +39,9 @@ ln -sf /lib/systemd/system/systemd-resolved.service /etc/systemd/system/dbus-org
 
 cp /root/wg0.conf /etc/wireguard/wg0.conf
 
+162.159.192.1:2408
+[2606:4700:d0::a29f:c001]:2408
+
 
 wg-quick up wg0
 
