@@ -1,4 +1,6 @@
-查看是否打开TUN/TAP = ON
+#尝试加载内核模块
+modprobe tun 
+#检查TUN模块加载是否正常
 lsmod | grep tun
 
 #Ubuntu添加库
