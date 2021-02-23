@@ -35,6 +35,9 @@ apt install resolvconf
 ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
 ln -sf /lib/systemd/system/systemd-resolved.service /etc/systemd/system/dbus-org.freedesktop.resolve1.service
 
+cp /root/wg0.conf /etc/wireguard/wg0.conf
+
+
 wg-quick up wg0
 
 wg-quick down wg0
