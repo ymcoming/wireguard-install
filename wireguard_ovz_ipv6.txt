@@ -14,7 +14,7 @@ go version
 
 apt install make
 
-不编译的话，可直接用：cd /usr/local/src && wget https://git.zx2c4.com/wireguard-go/snapshot/wireguard-go-0.0.20191012.tar.xz && tar xvf wireguard-go-0.0.20191012.tar.xz && cd wireguard-go-0.0.20191012
+cd /usr/local/src && wget https://git.zx2c4.com/wireguard-go/snapshot/wireguard-go-0.0.20191012.tar.xz && tar xvf wireguard-go-0.0.20191012.tar.xz && cd wireguard-go-0.0.20191012
 
 nano device/queueconstants_default.go
 MaxSegmentSize             = 1700 
