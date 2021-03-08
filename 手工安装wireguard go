@@ -1,0 +1,82 @@
+安装 WireGuard,Debian
+
+首先安装一些必要的工具，防止接下来的操作出问题。
+
+apt update
+apt install curl sudo lsb-release -y
+
+安装 wgcf
+curl -fsSL git.io/wgcf.sh | sudo bash
+wgcf register
+wgcf generate
+
+编辑 WireGuard 配置文件
+
+将配置文件中的节点域名 engage.cloudflareclient.com 解析成 IP。不过一般都是以下两个结果：
+
+162.159.192.1
+2606:4700:d0::a29f:c001
+
+这样做是因为后面的操作要根据 VPS 所配备的网络协议的不同去选择要连接 WARP 的节点是 IPv4 或 IPv6 协议。
+
+为 IPv4 Only 服务器添加 IPv6 网络支持
+
+[Peer]
+PublicKey = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
+AllowedIPs = ::/0
+Endpoint = 162.159.192.1:2408
+
+DNS = 9.9.9.10,8.8.8.8,1.1.1.1
+
+
+为 IPv6 Only 服务器添加 IPv4 网络支持
+将配置文件中的 engage.cloudflareclient.com 替换为 [2606:4700:d0::a29f:c001]，并删除 AllowedIPs = ::/0。即配置文件中 [Peer] 部分为：
+
+[Peer]
+PublicKey = bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=
+AllowedIPs = 0.0.0.0/0
+Endpoint = [2606:4700:d0::a29f:c001]:2408
+
+DNS = 2620:fe::10,2001:4860:4860::8888,2606:4700:4700::1111
+
+启用 WireGuard 网络接口
+ cp wgcf-profile.conf /etc/wireguard/wgcf.conf\
+开启网络接口（命令中的 wgcf 对应的是配置文件 wgcf.conf 的文件名前缀）。
+sudo wg-quick up wgcf
+
+执行执行ip a命令，此时能看到名为wgcf的网络接口
+执行以下命令检查是否连通。同时也能看到正在使用的是 Cloudflare 的网络。
+
+# IPv4 Only VPS
+curl -6 ip.p3terx.com
+# IPv6 Only VPS
+curl -4 ip.p3terx.com
+
+测试完成后关闭相关接口，因为这样配置只是临时性的。
+
+sudo wg-quick down wgcf
+正式启用 WireGuard 网络接口
+
+# 启用守护进程
+sudo systemctl start wg-quick@wgcf
+# 设置开机启动
+sudo systemctl enable wg-quick@wgcf
+
+
+优先使用 IPv4 网络
+默认情况下 IPv6 网络优先级会高于 IPv4 ，也就是说 IPv4 Only 服务器会优先走 WARP 节点，而 IPv6 Only 服务器则依然是走原来的 IPv6 网络。
+
+编辑 /etc/gai.conf 文件，在末尾添加下面这行配置：
+precedence  ::ffff:0:0/96   100
+
+一键添加命令如下：
+echo 'precedence  ::ffff:0:0/96   100' | sudo tee -a /etc/gai.conf
+
+完事执行 curl ip.p3terx.com 命令，显示 IPv4 地址则代表成功。
+
+WARP 网速测试
+
+安装 Ookla Speedtest CLI
+
+curl -fsSL git.io/speedtest-cli.sh | sudo bash
+speedtest
