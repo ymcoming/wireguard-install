@@ -39,6 +39,38 @@ Endpoint = [2606:4700:d0::a29f:c001]:2408
 
 DNS = 2620:fe::10,2001:4860:4860::8888,2606:4700:4700::1111
 
+------安装wireguard-------
+echo "deb http://deb.debian.org/debian/ unstable main" > /etc/apt/sources.list.d/unstable.list && printf 'Package: *\nPin: release a=unstable\nPin-Priority: 90\n' > /etc/apt/preferences.d/limit-unstable && apt update
+
+apt install wireguard-tools --no-install-recommends
+
+cd /tmp && wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz && tar zvxf go1.13.4.linux-amd64.tar.gz &&  mv go /opt/go1.13.4 &&  ln -s /opt/go1.13.4/bin/go /usr/local/bin/go
+
+go version
+
+apt install make
+
+cd /usr/local/src && wget https://git.zx2c4.com/wireguard-go/snapshot/wireguard-go-0.0.20191012.tar.xz && tar xvf wireguard-go-0.0.20191012.tar.xz && cd wireguard-go-0.0.20191012
+
+make
+
+cp wireguard-go /usr/local/bin
+
+wireguard-go --version
+
+wg genkey | tee private key | wg pubkey > publickey
+
+`nano /lib/systemd/system/wg-quick@.service`,add this line directly below:   Environment=WG_ENDPOINT_RESOLUTION_RETRIES=infinity 
+Environment=WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1
+
+apt install resolvconf
+
+ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
+ln -sf /lib/systemd/system/systemd-resolved.service /etc/systemd/system/dbus-org.freedesktop.resolve1.service
+------安装wireguard-------
+
+
+
 启用 WireGuard 网络接口
  cp wgcf-profile.conf /etc/wireguard/wgcf.conf\
 开启网络接口（命令中的 wgcf 对应的是配置文件 wgcf.conf 的文件名前缀）。
