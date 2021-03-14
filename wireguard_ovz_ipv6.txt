@@ -34,7 +34,7 @@ Environment=WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1
 apt install openresolv
 apt install resolvconf
 
-ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf
+ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf  （可选）
 ln -sf /lib/systemd/system/systemd-resolved.service /etc/systemd/system/dbus-org.freedesktop.resolve1.service
 
 cp /root/wg0.conf /etc/wireguard/wg0.conf
