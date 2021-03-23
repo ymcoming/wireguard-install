@@ -70,8 +70,7 @@ Debian、Ubuntu：apt install wireguard
 1.启动
 
 wg-quick up wgcf
-如果运行完就失联了(VPS的SSH终端没反应了)。先重启VPS，检查一下配置有没有问题，可以复制评论给嗷嗷看看。
-当然，也不用太担心，如果你没漏掉什么步骤，一般是不会有事的。
+
 
 2.测试
 
