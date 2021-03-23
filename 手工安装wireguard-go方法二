@@ -3,6 +3,8 @@ Github地址：https://github.com/WireGuard/wireguard-go
 编译安装
 一些需要的软件yum install -y wget git make
 如果是debian/ubuntu：apt install -y wget git make
+
+
 1.安装golang1.16
 
 wget https://golang.org/dl/go1.16.1.linux-amd64.tar.gz
@@ -15,6 +17,9 @@ export GOPATH=~/gopath
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 EOF
 source /etc/profile
+
+
+
 2.拉取代码并编译
 
 git clone https://git.zx2c4.com/wireguard-go.git
@@ -30,6 +35,8 @@ wget https://github.com/peng4740/wireguard-go-builder/releases/download/0.0.2020
 tar zxf wireguard-go-linux-amd64.tar.gz
 mv wireguard-go /usr/local/sbin
 rm -f wireguard-go-linux-amd64.tar.gz
+
+
 二、安装wgcf
 这个是用来生成warp配置的
 Github地址：https://github.com/ViRb3/wgcf
@@ -37,6 +44,9 @@ Github地址：https://github.com/ViRb3/wgcf
 安装
 wget https://github.com/ViRb3/wgcf/releases/download/v2.2.2/wgcf_2.2.2_linux_amd64 -O /usr/local/sbin/wgcf
 chmod +x /usr/local/sbin/wgcf
+
+
+
 三、用wgcf生成配置
 echo|wgcf register
 wgcf generate
@@ -55,6 +65,8 @@ Debian、Ubuntu：apt install wireguard
 没说到系统可参考官网教程：https://www.wireguard.com/install/
 
 四、运行测试
+
+
 1.启动
 
 wg-quick up wgcf
