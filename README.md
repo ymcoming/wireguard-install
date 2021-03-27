@@ -29,3 +29,6 @@ You can get a VPS from just $1/month at [VirMach](https://billing.virmach.com/af
 ### Donations
 
 If you want to show your appreciation, you can donate via [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VBAYDL34Z7J6L) or [cryptocurrency](https://pastebin.com/raw/M2JJpQpC). Thanks!
+
+
+qrencode -t ansiutf8 < clent.conf
