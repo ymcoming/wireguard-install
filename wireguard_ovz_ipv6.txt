@@ -8,7 +8,7 @@ echo "deb http://deb.debian.org/debian/ unstable main" > /etc/apt/sources.list.d
 
 apt install wireguard-tools --no-install-recommends
 
-cd /tmp && wget https://dl.google.com/go/go1.13.4.linux-amd64.tar.gz && tar zvxf go1.13.4.linux-amd64.tar.gz &&  mv go /opt/go1.13.4 &&  ln -s /opt/go1.13.4/bin/go /usr/local/bin/go
+cd /tmp && wget https://dl.google.com/go/go1.16.1.linux-amd64.tar.gz && tar zvxf go1.16.1.linux-amd64.tar.gz &&  mv go /opt/go1.13.4 &&  ln -s /opt/go1.13.4/bin/go /usr/local/bin/go
 
 go version
 
