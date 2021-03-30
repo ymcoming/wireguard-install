@@ -32,3 +32,16 @@ If you want to show your appreciation, you can donate via [PayPal](https://www.p
 
 
 qrencode -t ansiutf8 < clent.conf
+
+出现以下错误的解决方法：
+RTNETLINK answers: Operation not supported，Unable to access interface: Protocol not supported
+
+apt-get update
+
+apt-get install linux-image-amd64 linux-headers-amd64
+
+reboot
+
+apt reinstall wireguard-dkms
+
+reboot
