@@ -31,7 +31,7 @@ wg genkey | tee private key | wg pubkey > publickey
 `nano /lib/systemd/system/wg-quick@.service`,add this line directly below:   Environment=WG_ENDPOINT_RESOLUTION_RETRIES=infinity 
 Environment=WG_I_PREFER_BUGGY_USERSPACE_TO_POLISHED_KMOD=1
 
-apt install openresolv
+apt install openresolv    （可选）
 apt install resolvconf
 
 ln -s /usr/bin/resolvectl /usr/local/bin/resolvconf  （可选）
